@@ -1,11 +1,19 @@
 [project]
 name = "bilrost"
 version = "0.1.0"
-description = "Add your description here"
+description = "Open Telemetry for humans"
 readme = "README.md"
 requires-python = ">=3.11"
+author = "jaco@gremble.xyz"
 dependencies = []
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "ruff>=0.9.7",
+]
