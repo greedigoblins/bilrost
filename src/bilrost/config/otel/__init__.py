@@ -1,18 +1,20 @@
-from bilrost.config.otlp import (
+from bilrost.config.otel.exporter import (
+    OTELExporterJaeger,
+    OTELExporterPrometheus,
+    OTELExporterZipkin,
+    OTELExportSelection,
+)
+from bilrost.config.otel.otlp import (
     OTELExporterOTLP,
     OTELExporterOTLPLogs,
     OTELExporterOTLPMetrics,
     OTELExporterOTLPTraces,
 )
-from bilrost.config.settings import (
+from bilrost.config.otel.settings import (
     OTELSDK,
     OTELAttributeLimits,
     OTELBatchLogProcessor,
     OTELBatchSpanProcessor,
-    OTELExporterJaeger,
-    OTELExporterPrometheus,
-    OTELExporterZipkin,
-    OTELExportSelection,
     OTELLogRecordLimits,
     OTELMetrics,
     OTELSpanLimits,

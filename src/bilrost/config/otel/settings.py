@@ -1,31 +1,42 @@
+import enum
+
 import pydantic_settings
 
 
-class OTELExporterJaeger(pydantic_settings.BaseSettings):
-    otel_exporter_jaeger_agent_host: str
-    otel_exporter_jaeger_agent_port: int
-    otel_exporter_jaeger_endpoint: str
-    otel_exporter_jaeger_user: str
-    otel_exporter_jaeger_password: str  # SECERT!
-    otel_exporter_jaeger_timeout: int
-    otel_exporter_jaeger_certificate: str
-    otel_exporter_jaeger_agent_split_oversized_batches: bool
-    otel_exporter_jaeger_grpc_insecure: bool
+class LogLevelEnum(enum.Enum):
+    """Custom Enum generation class to set log levels
+
+    Allows a mapping from severity values to log levels as part of the enum definition
+    """
+
+    def __new__(cls, name: str, lb: int, ub: int, description: str) -> "LogLevelEnum":
+        self: LogLevelEnum = object.__new__(cls)
+        self._value_ = name
+        for v in range(lb, ub + 1):
+            self._add_value_alias_(v)  # type: ignore
+        return self
+
+    def __init__(self, name: str, lb: int, ub: int, description: str) -> None:
+        self.description = description
 
 
-class OTELExporterZipkin(pydantic_settings.BaseSettings):
-    otel_exporter_zipkin_endpoint: str
-    otel_exporter_zipkin_timeout: int
-
-
-class OTELExporterPrometheus(pydantic_settings.BaseSettings):
-    otel_exporter_prometheus_host: str
-    otel_exporter_prometheus_port: int
+class LogLevel(LogLevelEnum):
+    TRACE = "trace", 1, 4, "Fine-grained debugging event."
+    DEBUG = "debug", 5, 8, "Debugging event."
+    INFO = "info", 9, 12, "Informational event. Indicates that an event happened."
+    WARN = (
+        "warn",
+        13,
+        16,
+        "Warning event. Not an error but is likely more important than an informational event.",
+    )
+    ERROR = "error", 17, 20, "Error event. Something went wrong."
+    FATAL = "fatal", 21, 24, "Fatal error event such as an application or system crash."
 
 
 class OTELSDK(pydantic_settings.BaseSettings):
-    otel_sdk_disabled: bool
-    otel_log_level: bool
+    otel_sdk_disabled: bool = False
+    otel_log_level: LogLevel = LogLevel.INFO
     otel_resource_attributes: bool
     otel_service_name: str
     otel_propagators: str
@@ -64,12 +75,6 @@ class OTELSpanLimits(pydantic_settings.BaseSettings):
 class OTELLogRecordLimits(pydantic_settings.BaseSettings):
     otel_logrecord_attribute_value_length_limit: int
     otel_logrecord_attribute_count_limit: int
-
-
-class OTELExportSelection(pydantic_settings.BaseSettings):
-    otel_traces_exporter: str
-    otel_metrics_exporter: str
-    otel_logs_exporter: str
 
 
 class OTELMetrics(pydantic_settings.BaseSettings):
